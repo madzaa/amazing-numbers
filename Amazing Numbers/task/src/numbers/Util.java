@@ -1,6 +1,8 @@
 
 package numbers;
 
+import java.util.Arrays;
+
 public class Util {
 
     private Util() {
@@ -9,7 +11,11 @@ public class Util {
 
     public static String[] convertToArray(long number, String regex) {
         String stringOfNumbers = String.valueOf(number);
-
         return stringOfNumbers.split(regex);
     }
+
+    public static long[] convertToArray(String number, String regex) {
+        return Arrays.stream(number.split(regex)).mapToLong(Long::parseLong).toArray();
+    }
+
 }

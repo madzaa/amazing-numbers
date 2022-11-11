@@ -12,8 +12,12 @@ public enum Status {
               * the second parameter shows how many consecutive numbers are to be processed;
             - separate the parameters with one space;
             - enter 0 to exit.
-                """);
+                """),
+    ENTER_INPUT("Enter a request:"),
+    WRONG_FIRST_PARAMETER("The first parameter should be a natural number or zero."),
+    WRONG_SECOND_PARAMETER("The second parameter should be a natural number or zero."),
 
+    EXIT("Goodbye!");
     final String statusMessage;
 
     Status(String statusMessage) {

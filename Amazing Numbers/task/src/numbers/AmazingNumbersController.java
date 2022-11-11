@@ -2,7 +2,6 @@ package numbers;
 
 import java.text.MessageFormat;
 import java.util.Scanner;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
 public class AmazingNumbersController {
@@ -11,7 +10,6 @@ public class AmazingNumbersController {
 
     AmazingNumberService amazingNumberService;
 
-    ConsoleHandler handler = new ConsoleHandler();
     Logger logger;
 
 
@@ -23,36 +21,50 @@ public class AmazingNumbersController {
 
     public void startInterface() {
 
-        System.out.println(Status.START.toString());
+        System.out.println(Status.START);
 
         while (true) {
-            logger.fine("Enter a request:");
-            long input = scanner.nextLong();
+            try {
+                System.out.println(Status.ENTER_INPUT);
+                var inputs = Util.convertToArray(scanner.nextLine(), " ");
 
-            if (input < 0) {
-                System.out.println("The first parameter should be a natural number or zero.");
+                if (inputs[0] == 0) {
+                    System.out.println(Status.EXIT);
+                    break;
+                }
+                if (inputs.length == 1) {
+                    singleInputResults(inputs[0]);
+                } else if (inputs.length == 2) {
+                    twoInputResults(inputs[0], inputs[1]);
+                }
+            } catch (Exception e) {
+                System.out.println(Status.WRONG_FIRST_PARAMETER);
             }
+        }
+    }
 
-            if (input == 0) {
-                System.out.println("Goodbye!");
-                break;
-            }
-
+    public void singleInputResults(long input) {
+        if (input < 0) {
+            System.out.println(Status.WRONG_FIRST_PARAMETER);
+        } else {
             System.out.println(printResults(input));
+        }
+    }
+
+    public void twoInputResults(long inputOne, long inputTwo) {
+        if (inputTwo <= 0) {
+            System.out.println(Status.WRONG_SECOND_PARAMETER);
+        } else {
+            for (int i = 0; i < inputTwo; i++) {
+                System.out.print(printSingleLineResults(inputOne));
+                inputOne++;
+            }
         }
     }
 
     public String printResults(long input) {
         return MessageFormat.format(
-                """
-                        Properties of {0}
-                                even: {1}
-                                 odd: {2}
-                                buzz: {3}
-                                duck: {4}
-                                palindromic: {5}
-                                gapful: {6}
-                        """,
+                Results.SINGLE_RESULT.resultMessage,
                 input,
                 amazingNumberService.isEven(input),
                 amazingNumberService.isOdd(input),
@@ -60,6 +72,17 @@ public class AmazingNumbersController {
                 amazingNumberService.isDuckNumber(input),
                 amazingNumberService.isPalindrome(input),
                 amazingNumberService.isGapfulNumber(input));
+    }
 
+    public String printSingleLineResults(long input) {
+        return MessageFormat.format(
+                Results.MULTIPLE_RESULTS.resultMessage,
+                input,
+                amazingNumberService.isBuzzNumber(input),
+                amazingNumberService.isDuckNumber(input),
+                amazingNumberService.isGapfulNumber(input),
+                amazingNumberService.isEven(input),
+                amazingNumberService.isOdd(input),
+                amazingNumberService.isPalindrome(input));
     }
 }
